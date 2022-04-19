@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LBC Albums</string>
+    <string name="error_get_albums">Erreur lors du chargement des Albums</string>
 </resources>

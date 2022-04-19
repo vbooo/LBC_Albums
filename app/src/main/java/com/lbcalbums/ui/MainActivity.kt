@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lbcalbums.databinding.ActivityMainBinding
 import com.lbcalbums.ui.adapter.AlbumAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -44,6 +46,18 @@ class MainActivity : AppCompatActivity() {
                     binding.activityMainProgressBar.visibility = View.GONE
                     // fill up the adapter
                     viewAdapter.listAlbums = it
+                }
+            }
+        )
+
+        // observe the getAlbumsError LiveData and update the view in consequence
+        viewModel.getAlbumsError.observe(
+            this,
+            { isError ->
+                if (isError) {
+                    binding.activityMainProgressBar.visibility = View.GONE
+                    binding.activityMainErrorMessage.visibility = View.VISIBLE
+                    binding.activityMainRecyclerView.visibility = View.GONE
                 }
             }
         )

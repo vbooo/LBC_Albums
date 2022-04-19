@@ -2,27 +2,48 @@ package com.lbcalbums.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.lbcalbums.domain.Result
 import com.lbcalbums.domain.model.Album
+import com.lbcalbums.domain.usecase.GetAlbumsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * This class holds MainActivity data
  */
-class MainActivityViewModel : ViewModel() {
-    var listAlbums = MutableLiveData<MutableList<Album>>()
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(
+    val getAlbumsUseCase: GetAlbumsUseCase
+) : ViewModel() {
+    var listAlbums = MutableLiveData<List<Album>>()
+    val getAlbumsError: MutableLiveData<Boolean> = MutableLiveData(false)
 
     // load the album list
     fun loadAlbums() {
-        val listLoaded = mutableListOf<Album>()
-        listLoaded.addAll(
-            listOf(
-                Album(1, 1, "titre 1", "https://via.placeholder.com/600/c4084a", "https://via.placeholder.com/150/c4084a"),
-                Album(2, 1, "titre 2", "https://via.placeholder.com/600/c4084a", "https://via.placeholder.com/150/c4084a"),
-                Album(3, 1, "titre 3", "https://via.placeholder.com/600/c4084a", "https://via.placeholder.com/150/c4084a"),
-                Album(4, 1, "titre 4", "https://via.placeholder.com/600/c4084a", "https://via.placeholder.com/150/c4084a"),
-                Album(5, 1, "titre 5", "https://via.placeholder.com/600/c4084a", "https://via.placeholder.com/150/c4084a"),
-                Album(6, 1, "titre 6", "https://via.placeholder.com/600/c4084a", "https://via.placeholder.com/150/c4084a")
-            )
-        )
-        listAlbums.postValue(listLoaded)
+        viewModelScope.launch {
+            getAlbumsUseCase(Unit).collect {
+                when (it) {
+                    is Result.Loading -> {
+                        Timber.e("Albums data loading")
+                    }
+                    is Result.Error -> {
+                        Timber.e("Error while loading albums")
+                        getAlbumsError.postValue(true)
+                    }
+
+                    is Result.Success -> {
+                        Timber.i("Albums successfully loaded")
+                        it.data?.let { list ->
+                            listAlbums.postValue(list)
+                        }
+                        getAlbumsError.postValue(false)
+                    }
+                }
+            }
+        }
     }
 }
