@@ -25,13 +25,16 @@ class AlbumRepositoryImpl @Inject constructor(
 
         if (networkUtils.hasNetworkConnection()) {
             try {
+                // get the album from remote source
                 val listRemote = albumRemoteDatasource.getAlbums()
+
+                // we emit the result now, because we don't need to wait the local saving
                 emit(Result.Success(data = mapToAlbumModel(listRemote)))
 
                 // first, we delete the albums
                 albumLocalDatasource.deleteAll()
 
-                // we save the albums in Room
+                // then we save the albums in Room
                 albumLocalDatasource.insertAlbums(listRemote)
             } catch (e: Exception) {
                 emit(Result.Error(exception = e))
@@ -43,6 +46,9 @@ class AlbumRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Mapping function from Album Room entity to Album model
+     */
     private fun mapToAlbumModel(listAlbum: List<com.lbcalbums.data.db.entity.Album>): List<Album> {
         val listToReturn = mutableListOf<Album>()
         for (item in listAlbum) {

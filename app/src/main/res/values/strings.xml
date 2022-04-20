@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">LBC Albums</string>
+    <string name="message_no_data">Aucun album à afficher</string>
     <string name="error_get_albums">Erreur lors du chargement des Albums</string>
 </resources>

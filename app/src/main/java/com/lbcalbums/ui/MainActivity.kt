@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lbcalbums.R
 import com.lbcalbums.databinding.ActivityMainBinding
 import com.lbcalbums.ui.adapter.AlbumAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,6 +58,19 @@ class MainActivity : AppCompatActivity() {
                 if (isError) {
                     binding.activityMainProgressBar.visibility = View.GONE
                     binding.activityMainErrorMessage.visibility = View.VISIBLE
+                    binding.activityMainErrorMessage.text = resources.getString(R.string.error_get_albums)
+                    binding.activityMainRecyclerView.visibility = View.GONE
+                }
+            }
+        )
+
+        viewModel.noData.observe(
+            this,
+            { noData ->
+                if (noData) {
+                    binding.activityMainProgressBar.visibility = View.GONE
+                    binding.activityMainErrorMessage.visibility = View.VISIBLE
+                    binding.activityMainErrorMessage.text = resources.getString(R.string.message_no_data)
                     binding.activityMainRecyclerView.visibility = View.GONE
                 }
             }
