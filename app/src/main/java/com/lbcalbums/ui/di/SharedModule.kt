@@ -1,9 +1,14 @@
 package com.lbcalbums.ui.di
 
+import android.app.Application
 import android.content.Context
+import androidx.room.Room
 import com.lbcalbums.BuildConfig
 import com.lbcalbums.data.NetworkUtils
+import com.lbcalbums.data.datasource.AlbumLocalDatasource
 import com.lbcalbums.data.datasource.AlbumRemoteDatasource
+import com.lbcalbums.data.db.AppDatabase
+import com.lbcalbums.data.db.dao.AlbumDao
 import com.lbcalbums.data.network.AlbumService
 import com.lbcalbums.data.repository.AlbumRepositoryImpl
 import com.lbcalbums.domain.repository.AlbumRepository
@@ -32,11 +37,13 @@ class SharedModule {
     @Singleton
     @Provides
     fun provideAlbumRepository(
-        albumDataSource: AlbumRemoteDatasource,
+        albumRemoteDataSource: AlbumRemoteDatasource,
+        albumLocalDataSource: AlbumLocalDatasource,
         networkUtils: NetworkUtils
     ): AlbumRepository {
         return AlbumRepositoryImpl(
-            albumDataSource,
+            albumRemoteDataSource,
+            albumLocalDataSource,
             networkUtils
         )
     }
@@ -55,4 +62,21 @@ class SharedModule {
     fun providesAlbumApi(retrofit: Retrofit): AlbumService = retrofit.create(
         AlbumService::class.java
     )
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(
+        app: Application
+    ): AppDatabase {
+        return Room.databaseBuilder(
+            app,
+            AppDatabase::class.java,
+            AppDatabase.DATABASE_NAME
+        )
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAlbumDao(database: AppDatabase): AlbumDao = database.albumDao()
 }

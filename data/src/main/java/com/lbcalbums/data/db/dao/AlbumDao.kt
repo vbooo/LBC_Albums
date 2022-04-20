@@ -12,10 +12,12 @@ interface AlbumDao {
     @Query("SELECT * FROM album")
     fun getAll(): List<Album>
 
+    @Query("DELETE FROM album")
+    fun deleteAll()
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(item: Album)
 
     @Delete
     fun delete(action: Album)
-
 }

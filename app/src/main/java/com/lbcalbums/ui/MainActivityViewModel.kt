@@ -28,7 +28,7 @@ class MainActivityViewModel @Inject constructor(
             getAlbumsUseCase(Unit).collect {
                 when (it) {
                     is Result.Loading -> {
-                        Timber.e("Albums data loading")
+                        Timber.i("Albums data loading")
                     }
                     is Result.Error -> {
                         Timber.e("Error while loading albums")
