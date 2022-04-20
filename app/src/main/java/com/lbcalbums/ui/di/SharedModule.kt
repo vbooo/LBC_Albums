@@ -32,11 +32,11 @@ class SharedModule {
     @Singleton
     @Provides
     fun provideAlbumRepository(
-        cityDataSource: AlbumRemoteDatasource,
+        albumDataSource: AlbumRemoteDatasource,
         networkUtils: NetworkUtils
     ): AlbumRepository {
         return AlbumRepositoryImpl(
-            cityDataSource,
+            albumDataSource,
             networkUtils
         )
     }
