@@ -21,7 +21,6 @@ class MainActivityViewModel @Inject constructor(
 ) : ViewModel() {
     var listAlbums = MutableLiveData<List<Album>>()
     val getAlbumsError: MutableLiveData<Boolean> = MutableLiveData(false)
-    val noData: MutableLiveData<Boolean> = MutableLiveData(false)
 
     // load the album list
     fun loadAlbums() {
@@ -40,9 +39,6 @@ class MainActivityViewModel @Inject constructor(
                         Timber.i("Albums successfully loaded")
                         it.data?.let { list ->
                             listAlbums.postValue(list)
-                            if (list.isEmpty()) {
-                                noData.postValue(true)
-                            }
                         }
                         getAlbumsError.postValue(false)
                     }

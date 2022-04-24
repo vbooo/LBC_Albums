@@ -56,6 +56,12 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
 
+    // Tests
+    testImplementation 'org.mockito:mockito-inline:2.8.47'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:3.10.0'
+    androidTestImplementation 'org.mockito:mockito-android:2.24.5'
+
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
